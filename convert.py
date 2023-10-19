@@ -13,12 +13,17 @@ sheet = workbook.sheet_by_index(0)  # 0 represents the first sheet
 # Create a JSON object to store the data
 data = []
 
-# Iterate through rows and columns, and convert to JSON
-for row in range(sheet.nrows):
+# Assuming the first row contains column headers
+headers = [sheet.cell_value(0, col) for col in range(sheet.ncols)]
+
+# Iterate through rows, skipping the first (header) row
+for row in range(1, sheet.nrows):
     row_data = {}
     for col in range(sheet.ncols):
-        cell_value = sheet.cell_value(row, col)
-        row_data[sheet.cell_value(0, col)] = cell_value  # Assuming the first row contains column headers
+        if headers[col] == "Name":
+            row_data["name"] = sheet.cell_value(row, col)
+        elif headers[col] == "Email":
+            row_data["email"] = sheet.cell_value(row, col)
     data.append(row_data)
 
 # Write the JSON data to a file
